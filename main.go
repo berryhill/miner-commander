@@ -80,64 +80,89 @@ func main() {
 				log.Println("read:", err)
 				return
 			}
-			log.Printf("recv: %s", message)
+			fmt.Println(message)
+			// log.Printf("recv: %s", message)
 		}
 	}()
 
-	go func() {
-		for {
-			select {
-			case <-claymoreLog:
-			// cl := parseClaymoreLog(<-claymoreLog)
-			// if cl != nil {
-			// 	log.Println(cl.Error)
-				err := c.WriteMessage(websocket.TextMessage, []byte(<-claymoreLog))
-				if err != nil {
-					log.Println("write:", err)
-					return
-				}
-				// error_array := strings.Split(cl.Error, ", ")
-				// if len(error_array) > 1 {
-				// 	if error_array[0] == "NVML: cannot get current temperature" {
-				// 		log_reboot()
-				// 		// reboot()
-				// 	} else if error_array[0] == "NVML: cannot get fan speed" {
-				// 		log_reboot()
-				// 		// reboot()
-				// 	}
-				// }
-			}
-		}
-	}()
-
-	ticker := time.NewTicker(time.Second)
-	defer ticker.Stop()
+	// go func() {
+	// 	for {
+	// 		select {
+	// 		case <-claymoreLog:
+	// 		// cl := parseClaymoreLog(<-claymoreLog)
+	// 		// if cl != nil {
+	// 		// 	log.Println(cl.Error)
+	// 			err := c.WriteMessage(websocket.TextMessage, []byte(<-claymoreLog))
+	// 			if err != nil {
+	// 				log.Println("write:", err)
+	// 				return
+	// 			}
+	// 			// error_array := strings.Split(cl.Error, ", ")
+	// 			// if len(error_array) > 1 {
+	// 			// 	if error_array[0] == "NVML: cannot get current temperature" {
+	// 			// 		log_reboot()
+	// 			// 		// reboot()
+	// 			// 	} else if error_array[0] == "NVML: cannot get fan speed" {
+	// 			// 		log_reboot()
+	// 			// 		// reboot()
+	// 			// 	}
+	// 			// }
+	// 		}
+	// 	}
+	// }()
 
 	for {
 		select {
-		case t := <-ticker.C:
-			err := c.WriteMessage(websocket.TextMessage, []byte(t.String()))
+		case <-claymoreLog:
+		// cl := parseClaymoreLog(<-claymoreLog)
+		// if cl != nil {
+		// 	log.Println(cl.Error)
+			err := c.WriteMessage(websocket.TextMessage, []byte(<-claymoreLog))
 			if err != nil {
 				log.Println("write:", err)
 				return
 			}
-		case <-interrupt:
-			log.Println("interrupt")
-			// To cleanly close a connection, a client should send a close
-			// frame and wait for the server to close the connection.
-			err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
-			if err != nil {
-				log.Println("write close:", err)
-				return
-			}
-			select {
-			case <-done:
-			case <-time.After(time.Second):
-			}
-			c.Close()
-			return
+			// error_array := strings.Split(cl.Error, ", ")
+			// if len(error_array) > 1 {
+			// 	if error_array[0] == "NVML: cannot get current temperature" {
+			// 		log_reboot()
+			// 		// reboot()
+			// 	} else if error_array[0] == "NVML: cannot get fan speed" {
+			// 		log_reboot()
+			// 		// reboot()
+			// 	}
+			// }
 		}
 	}
+
+	// ticker := time.NewTicker(time.Second)
+	// defer ticker.Stop()
+  //
+	// for {
+	// 	select {
+	// 	case t := <-ticker.C:
+	// 		err := c.WriteMessage(websocket.TextMessage, []byte(t.String()))
+	// 		if err != nil {
+	// 			log.Println("write:", err)
+	// 			return
+	// 		}
+	// 	case <-interrupt:
+	// 		log.Println("interrupt")
+	// 		// To cleanly close a connection, a client should send a close
+	// 		// frame and wait for the server to close the connection.
+	// 		err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+	// 		if err != nil {
+	// 			log.Println("write close:", err)
+	// 			return
+	// 		}
+	// 		select {
+	// 		case <-done:
+	// 		case <-time.After(time.Second):
+	// 		}
+	// 		c.Close()
+	// 		return
+	// 	}
+	// }
 }
 
 func logToSlack() {
