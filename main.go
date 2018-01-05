@@ -38,7 +38,7 @@ func parseClaymoreLog(error string) *ClaymoreLog {
 	return nil
 }
 
-var addr = flag.String("addr", "10.0.0.128:8080", "http service address")
+var addr = flag.String("addr", "10.0.0.128:8888", "http service address")
 
 func main() {
 	f, err := os.OpenFile(
