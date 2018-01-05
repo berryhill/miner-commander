@@ -38,7 +38,7 @@ func parseClaymoreLog(error string) *ClaymoreLog {
 	return nil
 }
 
-var addr = flag.String("addr", "35.225.249.250:8080", "http service address")
+var addr = flag.String("addr", "10.0.0.128:8080", "http service address")
 
 func main() {
 	f, err := os.OpenFile(
@@ -52,22 +52,7 @@ func main() {
 	claymoreLog := make(chan string)
 	go tailLogs(claymoreLog)
 
-	// for {
-	// 	cl := parseClaymoreLog(<-claymoreLog)
-	// 	if cl != nil {
-	// 		log.Println(cl.Error)
-	// 		error_array := strings.Split(cl.Error, ", ")
-	// 		if len(error_array) > 1 {
-	// 			if error_array[0] == "NVML: cannot get current temperature" {
-	// 				log_reboot()
-	// 				// reboot()
-	// 			} else if error_array[0] == "NVML: cannot get fan speed" {
-	// 				log_reboot()
-	// 				// reboot()
-	// 			}
-	// 		}
-	// 	}
-	// }
+	// --
 
 	flag.Parse()
 	log.SetFlags(0)
@@ -96,6 +81,32 @@ func main() {
 				return
 			}
 			log.Printf("recv: %s", message)
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-claymoreLog:
+			// cl := parseClaymoreLog(<-claymoreLog)
+			// if cl != nil {
+			// 	log.Println(cl.Error)
+				err := c.WriteMessage(websocket.TextMessage, []byte(<-claymoreLog))
+				if err != nil {
+					log.Println("write:", err)
+					return
+				}
+				// error_array := strings.Split(cl.Error, ", ")
+				// if len(error_array) > 1 {
+				// 	if error_array[0] == "NVML: cannot get current temperature" {
+				// 		log_reboot()
+				// 		// reboot()
+				// 	} else if error_array[0] == "NVML: cannot get fan speed" {
+				// 		log_reboot()
+				// 		// reboot()
+				// 	}
+				// }
+			}
 		}
 	}()
 
@@ -169,7 +180,7 @@ func tailLogs(ch chan string) {
 
 func testLog() {
 	for {
-		log.Println("Hello world!")
+		// log.Println("Hello world!")
 		duration := time.Second
 		time.Sleep(duration)
 	}
