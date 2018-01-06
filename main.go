@@ -38,6 +38,7 @@ import (
 // }
 
 var addr = flag.String("addr", "10.0.0.128:8899", "http service address")
+var claymore_on = false
 
 func main() {
 	// f, err := os.OpenFile(
@@ -84,15 +85,14 @@ func main() {
 			message_array := strings.Split(string(message), ":")
 			if message_array[0] == "cmd" {
 				if message_array[1] == "reboot" {
-					log_reboot();
-					//TODO: reboot
+					log_reboot()
+					reboot()
 				} else if message_array[1] == "setup" {
-					log_setup();
-					setupMiner();
-					//TODO: setup
+					log_setup()
+					setupMiner()
 				} else if message_array[1] == "start" {
-					log_start();
-					//TODO: setup
+					log_start()
+					startMiner()
 				}
 			}
 
@@ -174,8 +174,7 @@ func reboot() {
 
 func setupMiner() {
 	log.Println("Setting up Miner")
-	out, err := exec.Command(
-		"/bin/sh", "./mine-setup.sh").Output()
+	out, err := exec.Command("/bin/sh", "./mine-setup.sh").Output()
     if err != nil {
         // log.Fatal(err)
 				log.Println(err)
@@ -184,13 +183,17 @@ func setupMiner() {
 }
 
 func startMiner() {
-	log.Println("Starting Miner")
-	out, err := exec.Command(
-		"/bin/sh", "cd claymore && nohup ./start.bash > logs.txt &").Output()
-    if err != nil {
-        log.Fatal(err)
-    }
-    log.Printf(string(out))
+	if claymore_on == false {
+		log.Println("Starting Miner")
+		out, err := exec.Command("/bin/sh", "./start.sh").Output()
+	    if err != nil {
+	        log.Fatal(err)
+	    }
+	    log.Printf(string(out))
+			claymore_on = true
+	} else {
+		log.Println("Mine has already started")
+	}
 }
 
 // func tailLogs(ch chan string) {
