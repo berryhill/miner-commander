@@ -1,5 +1,7 @@
 #! /bin/bash
 
+echo "Mine being set out"
+
 echo mcb1234 | sudo -S nvidia-smi -pl 105
 nvidia-settings -c :0 -a 'GPUFanControlState=1'
 nvidia-settings -c :0 -a 'GPUTargetFanSpeed=50'

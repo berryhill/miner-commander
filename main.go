@@ -125,7 +125,7 @@ func main() {
 	// 	}
 	// }()
 
-	ticker := time.NewTicker(time.Second * 10)
+	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
 
 	for {
@@ -175,7 +175,7 @@ func reboot() {
 func setupMiner() {
 	log.Println("Setting up Miner")
 	out, err := exec.Command(
-		"/bin/sh", "./mine-setup.sh > claymore/logs.txt").Output()
+		"/bin/sh", "./mine-setup.sh").Output()
     if err != nil {
         // log.Fatal(err)
 				log.Println(err)
