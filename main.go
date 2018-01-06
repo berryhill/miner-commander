@@ -88,6 +88,7 @@ func main() {
 					//TODO: reboot
 				} else if message_array[1] == "setup" {
 					log_setup();
+					setupMiner();
 					//TODO: setup
 				} else if message_array[1] == "start" {
 					log_start();
@@ -165,7 +166,8 @@ func reboot() {
 	log.Println("Rebooting Miner")
 	out, err := exec.Command("/bin/sh", "./reboot.sh").Output()
     if err != nil {
-        log.Fatal(err)
+        // log.Fatal(err)
+				log.Println(err)
     }
     fmt.Printf(string(out))
 }
@@ -173,9 +175,10 @@ func reboot() {
 func setupMiner() {
 	log.Println("Setting up Miner")
 	out, err := exec.Command(
-		"/bin/sh", "nohup ./mine-setup.sh > claymore/logs.txt").Output()
+		"/bin/sh", "./mine-setup.sh > claymore/logs.txt").Output()
     if err != nil {
         // log.Fatal(err)
+				log.Println(err)
     }
     log.Printf(string(out))
 }
