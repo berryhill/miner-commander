@@ -1,3 +1,3 @@
 #!/bin/sh
 
-yes | nohup go run main.go &
+yes | nohup go run main.go > logs.txt &
