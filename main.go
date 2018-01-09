@@ -172,8 +172,9 @@ func reboot() {
   //   fmt.Printf(string(out))
 
 	cmd := exec.Command("echo", "mcb1234")
-	cmd := exec.Command("sudo", "-S", "reboot")
+	cmd2 := exec.Command("sudo", "-S", "reboot")
 	cmd.Start()
+	cmd2.Start()
 }
 
 func setupMiner() {
