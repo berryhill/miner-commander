@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	// "fmt"
 	"log"
 	"net/url"
 	"os"
@@ -164,12 +164,15 @@ func logToSlack() {
 
 func reboot() {
 	log.Println("Rebooting Miner")
-	out, err := exec.Command("mcb1234 | sudo -S reboot").Output()
-    if err != nil {
-        // log.Fatal(err)
-				log.Println(err)
-    }
-    fmt.Printf(string(out))
+	// out, err := exec.Command("/bin/sh", "./reboot.sh").Output()
+  //   if err != nil {
+  //       // log.Fatal(err)
+	// 			log.Println(err)
+  //   }
+  //   fmt.Printf(string(out))
+
+	cmd := exec.Command("ls", "-lah")
+	cmd.Start()
 }
 
 func setupMiner() {
